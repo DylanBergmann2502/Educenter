@@ -1,0 +1,119 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load thumbnail %}
+{% load cache %}
+{% block content %}
+
+{% include "main/page_title_to_home.html" %}
+
+<!-- about -->
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        {% thumbnail teacher.image "350x550" crop="center" as im %}
+          <img class="card-img-top rounded-0" src="{{im.url}}" width="{{ im.width }}" height="{{ im.height }}" alt="teacher">
+        {% endthumbnail %}
+        <h2 class="section-title">ABOUT OUR JOURNEY</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.dolore magna aliqua. Ut enim ad minim veniam, quis nostrud. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe ipsa illo quod veritatis, magni debitis fugiat dolore voluptates! Consequatur, aliquid. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat perferendis sint optio similique. Et amet magni facilis vero corporis quos.</p>
+        <p>exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsum a, facere fugit error accusamus est officiis vero in, nostrum laboriosam corrupti explicabo, cumque repudiandae deleniti perspiciatis quae consectetur enim. Laboriosam!</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /about -->
+
+<!-- fun facts -->
+<section class="section-sm bg-primary">
+  <div class="container">
+    <div class="row">
+      <!-- fun facts item -->
+      <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="text-center">
+          <h2 class="count text-white" data-count="{{teacher_count}}">0</h2>
+          <h5 class="text-white">TEACHERS</h5>
+        </div>
+      </div>
+      <!-- fun facts item -->
+      <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="text-center">
+          <h2 class="count text-white" data-count="{{course_count}}">0</h2>
+          <h5 class="text-white">COURSES</h5>
+        </div>
+      </div>
+      <!-- fun facts item -->
+      <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="text-center">
+          <h2 class="count text-white" data-count="{{student_count}}">0</h2>
+          <h5 class="text-white">STUDENTS</h5>
+        </div>
+      </div>
+      <!-- fun facts item -->
+      <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+        <div class="text-center">
+          <h2 class="count text-white" data-count="3737">0</h2>
+          <h5 class="text-white">SATISFIED CLIENT</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /fun facts -->
+
+<!-- success story -->
+<section class="section bg-cover" data-background="{% static 'images/backgrounds/success-story.jpg' %}">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-sm-4 position-relative success-video">
+        <a class="play-btn venobox" href="https://youtu.be/nA1Aqp0sPQo" data-vbtype="video">
+          <i class="ti-control-play"></i>
+        </a>
+      </div>
+      <div class="col-lg-6 col-sm-8">
+        <div class="bg-white p-5">
+          <h2 class="section-title">Success Stories</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /success story -->
+
+<!-- teachers -->
+<section class="section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <h2 class="section-title">Our Teachers</h2>
+        </div>
+        <!-- teacher -->
+        {% cache 480 about_teacher_list %}
+          {% for teacher in teachers %}
+            <div class="col-lg-4 col-sm-6 mb-5 mb-lg-0">
+            <div class="card border-0 rounded-0 hover-shadow">
+              {% thumbnail teacher.image "350x550" crop="center" as im %}
+                <img class="card-img-top rounded-0" src="{{im.url}}" width="{{ im.width }}" height="{{ im.height }}" alt="teacher">
+              {% endthumbnail %}
+              <div class="card-body">
+                <a href="{% url 'teacher-detail' teacher.id %}">
+                  <h4 class="card-title">{{teacher.user.full_name}}</h4>
+                </a>
+                <div class="d-flex justify-content-between">
+                  <span>Teacher</span>
+                  <ul class="list-inline">
+                    <li class="list-inline-item"><a class="text-color" id="fb" href="{{teacher.facebook}}"><i class="ti-facebook"></i></a></li>
+                    <li class="list-inline-item"><a class="text-color" id="tw" href="{{teacher.twitter}}"><i class="ti-twitter-alt"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% endcache %}
+      </div>
+    </div>
+  </section>
+  <!-- /teachers -->
+{% endblock content %}

@@ -1,0 +1,11 @@
+# Ignore Pycharm's idea files
+.idea/
+
+# Ignore Environment Variables
+.env
+
+# Ignore Virtual Environment, use the requirements.txt instead
+venv/
+
+# Since this is a demo, I will commit the db.sqlite3 and media
+# but in real life projects, they should be gitignored

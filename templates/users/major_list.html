@@ -1,0 +1,70 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load cache %}
+{% block content %}
+
+{% include "main/page_title_to_home.html" %}
+
+<!-- majors -->
+<section class="section">
+  <div class="container">
+    {% include "main/message.html" %}
+    {% if request.user.is_staff == True %}
+      <button class="btn btn-info mb-4">
+        <a class="text-white" href="{% url 'major-create' %}">Add Major</a>
+      </button>
+    {% endif %}
+    <div class="row">
+      <!-- major items -->
+      {% cache 480 major_list %}
+        {% for major in majors %}
+          <div class="col-lg-4 col-sm-6 mb-4">
+          <div class="card rounded-0 hover-shadow border-top-0 border-left-0 border-right-0">
+            <img class="card-img-top rounded-0" src="{{major.image.url}}" alt="research thumb">
+            <div class="card-body">
+              <h4 class="card-title">{{major.major}}</h4>
+              {% if request.user.is_staff == True %}
+                <button class="btn btn-info btn-xs">
+                  <a class="text-white" href="{% url 'major-update' major.id %}">Update Major</a>
+                </button>
+                <button class="btn btn-danger btn-xs">
+                  <a class="text-white" href="{% url 'major-delete' major.id %}">Delete Major</a>
+                </button>
+              {% endif %}
+              <p class="card-text">
+                {{major.description|truncatechars:90}}
+              </p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endcache %}
+    </div>
+  </div>
+  <div class="d-flex justify-content-center flex-nowrap">
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number}}">Next</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+    {% endif %}
+  </div>
+</section>
+<!-- /majors -->
+
+{% endblock content %}

@@ -1,0 +1,66 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+{% include "main/page_title_to_home.html" %}
+
+<!-- events -->
+<section class="section">
+  <div class="container">
+
+    {% include "main/message.html" %}
+
+    {% if request.user.is_staff == True %}
+      <button class="btn btn-info mb-5">
+        <a class="text-white" href="{% url 'event-create' %}">New Event</a>
+      </button>
+    {% endif %}
+
+    <div class="row">
+      {% for event in events %}
+        <!-- event -->
+        <div class="col-lg-4 col-sm-6 mb-5">
+          <div class="card border-0 rounded-0 hover-shadow">
+            <div class="card-img position-relative">
+              <img class="card-img-top rounded-0" src="{{event.image.url}}" alt="event thumb">
+              <div class="card-date"><span>{{event.date_time|date:"d"}}</span><br>{{event.date_time|date:"F"}}</div>
+            </div>
+            <div class="card-body">
+              <!-- location -->
+              <p><i class="ti-location-pin text-primary mr-2"></i>{{event.location|truncatechars:35}}</p>
+              <a href="{% url 'event-detail' event.id %}">
+                <h4 class="card-title">{{event.event|truncatechars:60}}</h4>
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="d-flex justify-content-center flex-nowrap">
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number}}">Next</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+    {% endif %}
+  </div>
+</section>
+<!-- /events -->
+
+{% endblock content %}

@@ -1,0 +1,72 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+{% include "main/page_title_to_home.html" %}
+
+<!-- blogs -->
+<section class="section">
+  <div class="container">
+
+    {% include "main/message.html" %}
+
+    {% if request.user.is_teacher == True %}
+      <button class="btn btn-info mb-5">
+        <a class="text-white" href="{% url 'blog-create' %}">New Post</a>
+      </button>
+    {% endif %}
+
+    <div class="row">
+      <!-- blog post -->
+      {% for post in posts %}
+        <article class="col-lg-4 col-sm-6 mb-5">
+          <div class="card rounded-0 border-bottom border-primary border-top-0 border-left-0 border-right-0 hover-shadow">
+            <img class="card-img-top rounded-0" src="{{post.image.url}}" alt="Post thumb">
+            <div class="card-body">
+              <!-- post meta -->
+              <ul class="list-inline mb-3">
+                <!-- post date -->
+                <li class="list-inline-item mr-3 ml-0">{{post.date_posted|date:"F d, Y"}}</li>
+                <!-- author -->
+                <li class="list-inline-item mr-3 ml-0">
+                <a href="{% url 'teacher-detail' post.teacher.id %}" class="text-secondary">By {{post.teacher.user.full_name}}</a>
+                </li>
+              </ul>
+              <a href="{% url 'blog-detail' post.id %}">
+                <h4 class="card-title">{{post.title|truncatechars:70}}</h4>
+              </a>
+              <p class="card-text">{{post.content|truncatechars:70}}</p>
+              <a href="{% url 'blog-detail' post.id %}" class="btn btn-primary btn-sm">read more</a>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="d-flex justify-content-center flex-nowrap">
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number}}">Next</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+    {% endif %}
+  </div>
+</section>
+<!-- /blogs -->
+
+{% endblock content %}

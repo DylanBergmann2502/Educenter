@@ -1,0 +1,90 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load hitcount_tags %}
+{% load cache %}
+{% block content %}
+
+
+{% include "main/page_title_detail_to_list.html" %}
+
+<!-- blog details -->
+<section class="section-sm bg-gray">
+  <div class="container">
+
+    {% include "main/message.html" %}
+
+    <div class="row">
+      <div class="col-12 mb-4">
+        <img src="{{post.image.url}}" alt="blog-thumb" class="img-fluid w-100">
+      </div>
+      <div class="col-12">
+        <ul class="list-inline">
+          <li class="list-inline-item mr-4 mb-3 mb-md-0 text-light"><span class="font-weight-bold mr-2">Posted By:</span>{{post.teacher.user.full_name}}</li>
+          <li class="list-inline-item mr-4 mb-3 mb-md-0 text-light">{{post.date_posted|date:"F d, Y"}}</li>
+          <li class="list-inline-item mr-4 mb-3 mb-md-0 text-light"><i class="ti-book mr-2"></i>Read {% get_hit_count for post %}</li>
+        </ul>
+        {% if request.user == post.teacher.user %}
+          <button class="btn btn-info mt-4 mb-8">
+            <a class="text-white" href="{% url 'blog-update' post.id %}">Update Post</a>
+          </button>
+          <button class="btn btn-danger mt-4 mb-8">
+            <a class="text-white" href="{% url 'blog-delete' post.id %}">Delete Post</a>
+          </button>
+        {% endif %}
+      </div>
+
+      <!-- border -->
+      <div class="col-12 mt-4">
+        <div class="border-bottom border-primary"></div>
+      </div>
+      <!-- blog contect -->
+      <div class="col-12 mb-5">
+        <h2>{{post.title}}</h2>
+        <p>{{post.content|linebreaks}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /blog details -->
+
+<!-- recommended post -->
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="section-title">Recommended</h2>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+  <!-- blog post -->
+  {% cache 480 related_post_list %}
+    {% for post in related_posts %}
+      <article class="col-lg-4 col-sm-6 mb-5 mb-lg-0">
+        <div class="card rounded-0 border-bottom border-primary border-top-0 border-left-0 border-right-0 hover-shadow">
+          <img class="card-img-top rounded-0" src="{{post.image.url}}" alt="Post thumb">
+          <div class="card-body">
+            <!-- post meta -->
+            <ul class="list-inline mb-3">
+              <!-- post date -->
+              <li class="list-inline-item mr-3 ml-0">{{post.date_posted|date:"F d, Y"}}</li>
+              <!-- author -->
+              <li class="list-inline-item mr-3 ml-0">
+                <a href="{% url 'teacher-detail' post.teacher.id %}" class="text-secondary">By {{post.teacher.user.full_name}}</a>
+              </li>
+            </ul>
+            <a href="{% url 'blog-detail' post.id %}">
+              <h4 class="card-title">{{post.title}}</h4>
+            </a>
+            <p class="card-text">{{post.content|truncatechars:70}}</p>
+            <a href="{% url 'blog-detail' post.id %}" class="btn btn-primary btn-sm">read more</a>
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+  {% endcache %}
+</div>
+  </div>
+</section>
+<!-- /recommended post -->
+
+{% endblock content %}

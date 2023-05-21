@@ -1,0 +1,32 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+{% include "main/page_title_detail_to_list.html" %}
+
+<!-- confirm_delete_form -->
+<section class="section bg-gray">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="section-title">{{detail_title}}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-7 mb-4 mb-lg-0">
+        <form method="POST" action="">
+          {% csrf_token %}
+          <h2>Are you sure you would like to delete this item?</h2>
+          <button type="submit" value="send" class="btn btn-danger">Yes, Delete</button>
+          <button class="btn btn-info mb-8">
+            <a class="text-white" href="{{request.META.HTTP_REFERER}}">Cancel</a>
+          </button>
+        </form>
+      </div>
+      {% include "main/contact_me.html" %}
+    </div>
+  </div>
+</section>
+<!-- /confirm_delete_form -->
+
+{% endblock content %}

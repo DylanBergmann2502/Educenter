@@ -1,0 +1,85 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load thumbnail %}
+{% load filtering_pagination %}
+{% block content %}
+
+{% include "main/page_title_to_home.html" %}
+
+<!-- teachers -->
+<section class="section">
+  <div class="container">
+    {% include "main/message.html" %}
+
+    {% if request.user.is_staff == True %}
+      <button class="btn btn-info mb-4">
+        <a class="text-white" href="{% url 'teacher-create' %}">New Teacher</a>
+      </button>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-12">
+        <!-- teachers by major -->
+        <ul class="list-inline text-center filter-controls mb-5">
+          <li class="list-inline-item m-3 text-uppercase active">
+            <a class="text-dark" href="{% url 'teacher-list' %}">All</a>
+          </li>
+          {% for major in majors %}
+            <li class="list-inline-item m-3 text-uppercase">
+              <a class="text-dark" href="{% url 'teacher-list' %}?major={{major.major}}">{{major.major}}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <!-- teacher list -->
+    <div class="row filtr-container">
+      <!-- teacher -->
+      {% for teacher in teachers %}
+        <div class="col-lg-4 col-sm-6 mb-5">
+          <div class="card border-0 rounded-0 hover-shadow">
+            {% thumbnail teacher.image "350x550" crop="center" as im %}
+              <img class="card-img-top rounded-0" src="{{im.url}}" width="{{ im.width }}" height="{{ im.height }}" alt="teacher">
+            {% endthumbnail %}
+            <div class="card-body ">
+              <a href="{% url 'teacher-detail' teacher.id %}">
+                <h4 class="card-title">{{teacher.user.full_name}}</h4>
+              </a>
+              <p>Teacher</p>
+              <ul class="list-inline">
+                <li class="list-inline-item"><a class="text-color" id="fb" href="{{teacher.facebook}}"><i class="ti-facebook"></i></a></li>
+                <li class="list-inline-item"><a class="text-color" id="tw" href="{{teacher.twitter}}"><i class="ti-twitter-alt"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center flex-nowrap">
+        {% if is_paginated %}
+
+<!--            {% if page_obj.has_previous %}-->
+<!--                <a class="btn btn-outline-info mb-4" href="?page=1">First</a>-->
+<!--                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>-->
+<!--            {% endif %}-->
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <a class="btn btn-info mb-4" href="{% relative_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
+                  <a class="btn btn-outline-info mb-4" href="{% relative_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+<!--            {% if page_obj.has_next %}-->
+<!--                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number}}">Next</a>-->
+<!--                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>-->
+<!--            {% endif %}-->
+
+        {% endif %}
+    </div>
+  </div>
+</section>
+<!-- /teachers -->
+
+{% endblock content %}

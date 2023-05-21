@@ -1,0 +1,77 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load cache %}
+{% block content %}
+
+
+{% include "main/page_title_detail_to_list.html" %}
+
+<!-- teacher details -->
+<section class="section">
+  <div class="container">
+    {% include "main/message.html" %}
+    <div class="row">
+      <div class="col-md-5 mb-5">
+        <img class="img-fluid w-100" src="{{teacher.image.url}}" alt="teacher">
+      </div>
+      <div class="col-md-6 mb-5">
+        {% if request.user == teacher.user %}
+          <button class="btn btn-info">
+              <a class="text-white" href ="{% url 'teacher-update' teacher.id %}">Update Your Profile</a>
+          </button>
+        {% endif %}
+        <h3>{{teacher.user.full_name}}</h3>
+        <h6 class="text-color">{{teacher.major.major}}</h6>
+        <p class="mb-5">{{teacher.major.description}}</p>
+        <div class="row">
+          <div class="col-md-6 mb-5 mb-md-0">
+            <h4 class="mb-4">CONTACT INFO:</h4>
+            <ul class="list-unstyled">
+              <li class="mb-3"><a class="text-color" href="mailto:{{teacher.user.email}}"><i class="ti-email mr-2"></i>{{teacher.user.email}}</a></li>
+              <li class="mb-3"><a class="text-color" href="tel:{{teacher.user.phone}}"><i class="ti-mobile mr-2"></i>{{teacher.user.phone.as_international}}</a></li>
+              <li class="mb-3"><a class="text-color" id="fb" href="{{teacher.facebook}}"><i class="ti-facebook mr-2"></i>{{teacher.user.full_name}}</a></li>
+              <li class="mb-3"><a class="text-color" id="tw" href="{{teacher.twitter}}"><i class="ti-twitter-alt mr-2"></i>{{teacher.user.full_name}}</a></li>
+              <li class="mb-3"><a class="text-color" href="http://maps.google.com/"><i class="ti-location-pin mr-2"></i>{{teacher.address}}</a></li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h4 class="mb-4">SUMMARY OF ACTIVITIES/INTERESTS</h4>
+            <ul class="list-unstyled">{{teacher.interest|linebreaks}}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <h4 class="mb-4">BIOGRAPHY</h4>
+        <p class="mb-5">{{teacher.bio|linebreaks}}</p>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <h4 class="mb-4">COURSES</h4>
+      </div>
+      {% cache 480 related_course_list %}
+        {% for course in courses %}
+          <!-- course item -->
+          <div class="col-lg-4 col-sm-6 mb-5">
+            <div class="card p-0 border-primary rounded-0 hover-shadow">
+              <img class="card-img-top rounded-0" src="{{course.image.url}}" alt="course thumb">
+              <div class="card-body">
+                <ul class="list-inline mb-2">
+                  <li class="list-inline-item"><a class="text-color" href="{% url 'major-list' %}">{{course.major.major}}</a></li>
+                </ul>
+                <a href="{% url 'course-detail' course.id %}">
+                  <h4 class="card-title">{{course.course}}</h4>
+                </a>
+                <p class="card-text mb-4">{{course.description|truncatechars:110}}</p>
+                <a href="https://github.com/DylanBergmann2502" class="btn btn-primary btn-sm">Apply now</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endcache %}
+    </div>
+  </div>
+</section>
+<!-- /teacher details -->
+{% endblock content %}

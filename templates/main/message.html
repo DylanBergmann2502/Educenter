@@ -1,0 +1,9 @@
+<!--Usually this section should not be repeated in many templates
+but due to the front end design, it has to be :"> -->
+<!-- Message -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+<!-- /Message -->

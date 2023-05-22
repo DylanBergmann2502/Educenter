@@ -1,6 +1,6 @@
 # Educenter
 
-Educenter is a university web application built for the ease of use for admins, teachers, and students. Written Django and Django Rest Framework, it offers various functionalities such as looking and applying for online courses, enrolling in interesting upcoming events, staying tune with the newest blog posts, etc. 
+Educenter is a university web application built for the ease of use for admins, teachers, and students. Written in Django and Django Rest Framework, it offers various functionalities such as looking and applying for online courses, enrolling in interesting upcoming events, staying tune with the newest blog posts, etc. 
 
 
 ## 1. Demo Pictures

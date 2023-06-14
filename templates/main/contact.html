@@ -1,5 +1,6 @@
 {% extends "main/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
 
 {% include "main/page_title_to_home.html" %}
@@ -7,6 +8,9 @@
 <!-- contact -->
 <section class="section bg-gray">
   <div class="container">
+
+    {% include "main/message.html" %}
+
     <div class="row">
       <div class="col-lg-12">
         <h2 class="section-title">Contact Us</h2>
@@ -14,13 +18,18 @@
     </div>
     <div class="row">
       <div class="col-lg-7 mb-4 mb-lg-0">
-        <form action="/contact.html" method="POST">
-          <input type="text" class="form-control mb-3" id="name" name="name" placeholder="Your Name" required>
-          <input type="email" class="form-control mb-3" id="mail" name="mail" placeholder="Your Email" required>
-          <input type="text" class="form-control mb-3" id="subject" name="subject" placeholder="Subject" required>
-          <textarea name="message" id="message" class="form-control mb-3" placeholder="Your Message" required></textarea>
-          <button type="submit" value="send" class="btn btn-primary">SEND MESSAGE</button>
+        <form method="POST" action="">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" value="send" class="btn btn-primary">Submit</button>
         </form>
+<!--        <form action="" method="POST">-->
+<!--          <input type="text" class="form-control mb-3" id="name" name="name" placeholder="Your Name" required>-->
+<!--          <input type="email" class="form-control mb-3" id="mail" name="mail" placeholder="Your Email" required>-->
+<!--          <input type="text" class="form-control mb-3" id="subject" name="subject" placeholder="Subject" required>-->
+<!--          <textarea name="message" id="message" class="form-control mb-3" placeholder="Your Message" required></textarea>-->
+<!--          <button type="submit" value="send" class="btn btn-primary">SEND MESSAGE</button>-->
+<!--        </form>-->
       </div>
       {% include "main/contact_me.html" %}
     </div>

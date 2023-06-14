@@ -27,7 +27,7 @@ urlpatterns = [
     # main urls
     path('', main_views.home, name="home"),
     path('about/', main_views.about, name="about"),
-    path('contact/', main_views.contact, name="contact"),
+    path('contact/', main_views.ContactView.as_view(), name="contact"),
 
     # academics urls
     path('', include('academics.urls')),

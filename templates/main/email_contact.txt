@@ -1,0 +1,5 @@
+Hello {{name|safe}},
+Thank you for sending us your opinion with the subject:
+"{{subject|safe}}"
+
+We will review your message and may contact you in the future.

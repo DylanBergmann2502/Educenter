@@ -1,7 +1,13 @@
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.views import generic
+
 from academics.models import Course
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
+
+from main.forms import ContactForm
 from postings.models import Event, Post
 from users.models import Teacher
 
@@ -27,11 +33,22 @@ def about(request):
     teachers = Teacher.objects.all()[0:3]
 
     context = {'teachers':teachers, 'title':title,
-               'teacher_count':teacher_count, 'course_count':course_count,
-               'student_count':student_count}
+               'teacher_count': teacher_count, 'course_count':course_count,
+               'student_count': student_count}
     return render(request, 'main/about.html', context)
 
 
-def contact(request):
-    context = {"title": "Contact Us"}
-    return render(request, 'main/contact.html', context)
+class ContactView(SuccessMessageMixin,generic.FormView):
+    template_name = 'main/contact.html'
+    form_class = ContactForm
+    success_message = "Thank you for contacting us!"
+    success_url = reverse_lazy('contact')
+
+    def form_valid(self, form):
+        form.send_email()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Contact Us"
+        return context
